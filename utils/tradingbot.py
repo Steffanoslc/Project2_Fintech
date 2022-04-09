@@ -379,3 +379,65 @@ def SMA_1458(btcusd_df):
     return sma_1458_plot
 
 
+def  golden_ratio_multiplier(): 
+    ma_golden_df = btcusd_df.loc[:, ["close"]].copy() 
+
+    ma_golden = 350 
+
+    ma_golden_df['MA_350'] =  ma_golden_df['close'].rolling(window=ma_golden).mean()
+
+    ma_golden_df['Golden_Ratio_Multiplier'] = ma_golden_df['MA_350'] * 1.6
+
+    ma_golden_df['2'] = ma_golden_df['MA_350'] * 2
+
+    ma_golden_df['3'] = ma_golden_df['MA_350'] * 3
+
+    ma_golden_df['5'] = ma_golden_df['MA_350'] * 5
+
+    ma_golden_df['8'] = ma_golden_df['MA_350'] * 8
+
+    ma_golden_df['13'] = ma_golden_df['MA_350'] * 13
+
+    close_price_golden = ma_golden_df[['close']].hvplot(
+    line_color='lightgray',
+    ylabel='Price in $',
+    width=1000,
+    height=400
+    )
+
+    ma_350 = ma_golden_df[['MA_350']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    fib_2 = ma_golden_df[['2']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    fib_3 = ma_golden_df[['3']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    fib_5 = ma_golden_df[['5']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    fib_8 = ma_golden_df[['8']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    fib_13 = ma_golden_df[['13']].hvplot(
+    width=1000,
+    height=400
+    )
+
+
+    golden_fib_plot = close_price_golden * ma_350 * fib_2 * fib_3 * fib_5 * fib_8 * fib_13 
+    
+    golden_fib_plot
+
+    return golden_fib_plot 
