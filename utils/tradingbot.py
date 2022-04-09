@@ -26,9 +26,6 @@ def tradingbot():
     # Drop all NaN values from the DataFrame
     signals_df = signals_df.dropna()
 
-    # Review the DataFrame
-    display(signals_df.head())
-    display(signals_df.tail())
 
     # Set the short window and long window
     short_window = 50
@@ -40,9 +37,6 @@ def tradingbot():
 
     signals_df = signals_df.dropna()
 
-    # Review the DataFrame
-    display(signals_df.head())
-    display(signals_df.tail())
 
     # Initialize the new Signal column
     signals_df['Signal'] = 0.0
@@ -53,18 +47,14 @@ def tradingbot():
     # When Actual Returns are less than 0, generate signal to sell stock short
     signals_df.loc[(signals_df['Actual Returns'] < 0), 'Signal'] = -1
 
-    # Review the DataFrame
-    display(signals_df.head())
-    display(signals_df.tail())
+
 
     signals_df['Signal'].value_counts()
 
     # Calculate the strategy returns and add them to the signals_df DataFrame
     signals_df['Strategy Returns'] = signals_df['Actual Returns'] * signals_df['Signal'].shift()
 
-    # Review the DataFrame
-    display(signals_df.head())
-    display(signals_df.tail())
+
 
     # Plot Strategy Returns to examine performance
     (1 + signals_df['Strategy Returns']).cumprod().plot()
@@ -151,10 +141,6 @@ def tradingbot():
     # Add the strategy returns to the DataFrame
     predictions_df['Strategy Returns'] = signals_df['Strategy Returns']
 
-    # Review the DataFrame
-    display(predictions_df.head())
-    display(predictions_df.tail())
-
     #plot cumulative returns
     (1 + predictions_df[['Actual Returns', 'Strategy Returns']]).cumprod().hvplot(
         title='Baseline Actual v. Strategy Returns with SMA 50 & 100'
@@ -198,9 +184,7 @@ def tradingbot():
     )
 
     ml_predictions_df = ml_predictions_df.loc['2018-06-25':'2021-06-25']
-    # Review the DataFrame
-    display(ml_predictions_df.head())
-    display(ml_predictions_df.tail())
+   
     # Plot the actual returns versus the strategy returns
     (1 + ml_predictions_df[['Actual Returns', 'Trading Algorithm Returns']]).cumprod().hvplot(
         title='Random Forest Actual v. Strategy Returns with SMA 50 & 100: 36 Month Window'
@@ -219,7 +203,6 @@ def mayer_calculations(btcusd_df):
 
     mayer_df['Mayer_Multiples'] = mayer_df['close'] / mayer_df['SMA_200']
 
-    print(mayer_df)
 
     close_price = mayer_df[["close"]].hvplot(
     line_color='lightgray',
@@ -292,7 +275,6 @@ def sharpe_visual(btcusd_df):
 
     sharpe_ratios = annualized_avg_returns / annualized_stds
 
-    print(sharpe_ratios)
 
     btc_price_chart = btcusd_df.hvplot(
     line_color='lightgray',
@@ -312,5 +294,88 @@ def sharpe_visual(btcusd_df):
     sharpe_plot
 
     return sharpe_plot 
+
+
+def SMA_bands(btcusd_df):
+    sma_df = btcusd_df.loc[:, ["close"]].copy()
+
+    window_10 = 10
+    window_20 = 20
+    window_50 = 50
+    window_100 = 100
+    window_200 = 200
+
+    sma_df['SMA_10'] = sma_df['close'].rolling(window=window_10).mean()
+
+    sma_df['SMA_20'] = sma_df['close'].rolling(window=window_20).mean()
+
+    sma_df['SMA_50'] = sma_df['close'].rolling(window=window_50).mean()
+
+    sma_df['SMA_100'] = sma_df['close'].rolling(window=window_100).mean()
+
+    sma_df['SMA_200'] = sma_df['close'].rolling(window=window_200).mean()
+
+    close_price_sma = sma_df[["close"]].hvplot(
+    line_color='lightgray',
+    ylabel='Price in $',
+    width=1000,
+    height=400
+    )
+
+    sma_10 = sma_df[['SMA_10']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_20 = sma_df[['SMA_20']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_50 = sma_df[['SMA_50']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_100 = sma_df[['SMA_100']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_200 = sma_df[['SMA_200']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_plot = close_price_sma * sma_10 * sma_20 * sma_50 * sma_100 * sma_200 
+    sma_plot 
+
+    return sma_plot 
+
+
+def SMA_1458(btcusd_df):
+
+    sma_1458_df = btcusd_df.loc[:, ["close"]].copy()
+
+    window_1458 = 1458
+
+    sma_1458_df['SMA_1458'] = sma_1458_df['close'].rolling(window=window_1458).mean() 
+
+    close_price_sma_1458 = sma_1458_df[["close"]].hvplot(
+    line_color='lightgray',
+    ylabel='Price in $',
+    width=1000,
+    height=400
+    )
+
+    sma_1458 = sma_1458_df[['SMA_1458']].hvplot(
+    width=1000,
+    height=400
+    )
+
+    sma_1458_plot = close_price_sma_1458 * sma_1458 
+    sma_1458_plot
     
+    return sma_1458_plot
+
 
