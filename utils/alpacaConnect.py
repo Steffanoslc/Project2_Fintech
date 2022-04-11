@@ -5,9 +5,6 @@ from datetime import date
 from dotenv import load_dotenv
 from alpaca_trade_api.rest import REST, TimeFrame
 
-
-ticker= "BTCUSD"
-
 def get_data(ticker):
     load_dotenv()
     alpaca_api_key= os.getenv("ALPACA_API_KEY")
@@ -20,9 +17,6 @@ def get_data(ticker):
     start_date= date.today().strftime("%Y-%m-%d")
     end_date= date.today() - datetime.timedelta(days=8*365)
     data = alpaca.get_crypto_bars(ticker, TimeFrame.Day, end_date, start_date).df
-    return data
-
-def data_cleaning(data):
     btcusd_df= data.drop(columns=["open","high","low","volume","trade_count","vwap"])
     btcusd_df= btcusd_df.loc[btcusd_df["exchange"]== "CBSE"]
     btcusd_df= btcusd_df.drop(columns="exchange")
