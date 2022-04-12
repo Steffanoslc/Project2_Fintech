@@ -95,14 +95,19 @@ def mayer_calculations(btcusd_df):
 
 #### WORK ON IN CLASS and ask questions
 def sharpe_visual(btcusd_df):
-    sharpe_price_df = btcusd_df.loc[:, ["close"]].copy()
-    sharpe_daily_returns = sharpe_price_df.pct_change().dropna() 
-    stds = sharpe_daily_returns.std()
-    annualized_stds = stds * np.sqrt(365)
-    annualized_avg_returns = sharpe_daily_returns.mean() * 365
-    sharpe_ratios = annualized_avg_returns / annualized_stds
+    sharpe_price_df = btcusd_df.copy()
+    sharpe_change_df = sharpe_price_df    
+    sharpe_daily_returns = sharpe_change_df.pct_change().dropna() 
+    sharpe_daily_returns.columns = ['pct_change']
+    stds = sharpe_daily_returns['pct_change'].std()
+    sharpe_ratios= (sharpe_daily_returns - 0.0369) / stds
+    sharpe_ratios.columns = ['Sharpe Ratios']
+    ratio_plot = sharpe_ratios['Sharpe Ratios'].hvplot(ylim = [-5,6])
+    price_plot = sharpe_price_df['close'].hvplot()
 
-    return sharpe_ratios 
+    sharpe_plot = ratio_plot * price_plot 
+
+    return sharpe_plot 
 
 #### USE THIS FUNCTION TO TEST VISUALS
 def SMA_bands(btcusd_df):
