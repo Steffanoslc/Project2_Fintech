@@ -17,8 +17,6 @@ def signals_features(ticker):
     signals_df.loc[(signals_df['Actual Returns'] >= 0), 'Signal'] = 1
     signals_df.loc[(signals_df['Actual Returns'] < 0), 'Signal'] = -1
     signals_df['Strategy Returns'] = signals_df['Actual Returns'] * signals_df['Signal'].shift()
-    signals_df["Strategy Cummulative Returns"]= (1 + signals_df['Strategy Returns']).cumprod()
-    signals_df = signals_df.dropna()
 
     return signals_df
 
@@ -36,8 +34,9 @@ def mayer_calculations(btcusd_df):
     mayer_bands['Bearish'] = mayer_bands['Mayer_Multiples'] * 1.1
     mayer_bands['Bullish'] = mayer_bands['Mayer_Multiples'] * 1.7
     mayer_bands['Bullish_Extension'] = mayer_bands['Mayer_Multiples'] * 2.5
-   
-    return mayer_df, mayer_bands
+    all_data_m= pd.concat(mayer_df, mayer_bands, axis=1)
+
+    return all_data_m
 
 #### WORK ON IN CLASS and ask questions
 def sharpe_visual(btcusd_df):

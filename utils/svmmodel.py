@@ -22,7 +22,9 @@ def svmmodel(signals_df):
     predictions_df = pd.DataFrame(index=X_test.index)
     predictions_df['Predicted'] = svm_pred
     predictions_df['Actual Returns'] = signals_df['Actual Returns']
-    predictions_df['Strategy Returns'] = signals_df['Strategy Returns']
+    predictions_df['trading_algorithm_returns'] = predictions_df["Actual Returns"] * predictions_df["Predicted"]
+    predictions_df["Commulative Actual Returns"]= (1 + predictions_df['Actual Returns']).cumprod()
+    predictions_df["Commulative Trading Algorithm Returns"]= (1 - predictions_df['trading_algorithm_returns']).cumprod()
 
     return predictions_df
 
