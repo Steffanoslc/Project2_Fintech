@@ -9,11 +9,12 @@ from utils.alpacaConnect import get_data
 from utils.tradingbot import SMA_bands
 from utils.tradingbot import SMA_1458
 from utils.tradingbot import golden_ratio_multiplier
+from utils.twitterConnect import twitter_df
 
 
 ticker= "BTCUSD"
 url= "https://api.alternative.me/fng/?"
-
+search_term="#bitcoin -filter:retweets"
 
 
 
@@ -49,6 +50,10 @@ def run():
     st.header('Golden Ratio Multiplier')
     st.line_chart(GRM_df)
 
+    #Twittwer Sentiment plot
+    sentiment_df= twitter_df(search_term)
+    st.header('Twitter scatter plot')
+    st.table(sentiment_df)
 
 if __name__ == "__main__":
     run()
